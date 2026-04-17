@@ -3,22 +3,26 @@ provider "azurerm" {
     subscription_id = "36792000-4b8f-4e6c-9811-bacd51254af5"
 
 }
+#create resource group
 resource "azurerm_resource_group" "sandboxrg" {
     name = "sandboxrg"
     location = "Central India"
 }
+#create virtualnetwork
 resource "azurerm_virtual_network" "azvnet" {
     name = "azvnet"
     address_space = ["10.0.0.0/16"]
     location = azurerm_resource_group.sandboxrg.location
     resource_group_name = azurerm_resource_group.sandboxrg.name
 }
+#create a subnet
 resource "azurerm_subnet" "az_subnet" {
     name = "az_subnet"
     resource_group_name = azurerm_resource_group.sandboxrg.name
     virtual_network_name = azurerm_virtual_network.azvnet.name
     address_prefixes = ["10.0.1.0/24"]
 }
+#create public ip
 resource "azurerm_public_ip" "public_ip" {
     name = "public_ip"
     location = azurerm_resource_group.sandboxrg.location
@@ -26,6 +30,7 @@ resource "azurerm_public_ip" "public_ip" {
     allocation_method = "Static"
     sku                 = "Standard"
 }
+# create network interface
 resource "azurerm_network_interface" "az_nic" {
     name = "az_nic"
     location = azurerm_resource_group.sandboxrg.location
